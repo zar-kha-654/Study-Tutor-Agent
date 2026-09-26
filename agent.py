@@ -1,6 +1,6 @@
 import os
-
 from crewai import Agent, Task, Crew, Process
+from crewai.llm import LLM
 
 from tools import study_calculator
 from memory import create_memory
