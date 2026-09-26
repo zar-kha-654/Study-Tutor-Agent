@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from agent import ask_tutor
 
@@ -638,4 +637,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-```
