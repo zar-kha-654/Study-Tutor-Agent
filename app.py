@@ -2,10 +2,9 @@ import streamlit as st
 from agent import ask_tutor
 
 
-# =========================================================
+# -----------------------------
 # PAGE CONFIG
-# =========================================================
-
+# -----------------------------
 st.set_page_config(
     page_title="Study Tutor AI",
     page_icon="🎓",
@@ -13,124 +12,207 @@ st.set_page_config(
 )
 
 
-# =========================================================
+# -----------------------------
 # CUSTOM CSS
-# =========================================================
-
+# -----------------------------
 st.markdown(
     """
     <style>
 
     /* Main background */
     .stApp {
-        background-color: #050914;
+        background:
+            radial-gradient(circle at 20% 10%, rgba(0, 217, 255, 0.12), transparent 30%),
+            radial-gradient(circle at 80% 20%, rgba(80, 100, 255, 0.10), transparent 30%),
+            #050914;
         color: white;
+    }
+
+    /* Hide Streamlit menu */
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    footer {
+        visibility: hidden;
     }
 
     /* Main container */
     .block-container {
-        max-width: 1150px;
-        padding-top: 2rem;
+        max-width: 1200px;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
 
-    /* Main title */
-    .main-title {
-        font-size: 44px;
+    /* Hero */
+    .hero {
+        text-align: center;
+        padding: 30px 20px 20px 20px;
+    }
+
+    .hero-title {
+        font-size: 52px;
         font-weight: 800;
         color: #00d9ff;
-        margin-bottom: 5px;
+        text-shadow:
+            0 0 10px rgba(0, 217, 255, 0.7),
+            0 0 25px rgba(0, 217, 255, 0.4);
     }
 
-    /* Subtitle */
-    .subtitle {
-        color: #9aa9c2;
+    .hero-subtitle {
         font-size: 18px;
-        margin-bottom: 20px;
+        color: #aab7c8;
+        margin-top: 10px;
     }
 
     /* Status */
     .status {
-        display: inline-block;
-        padding: 7px 15px;
-        border-radius: 20px;
-        background-color: #071c2b;
-        border: 1px solid #00c8ff;
-        color: #6eeaff;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+        padding: 8px 18px;
+        border-radius: 30px;
+        background: rgba(0, 217, 255, 0.08);
+        border: 1px solid rgba(0, 217, 255, 0.3);
+        color: #d9f9ff;
         font-size: 14px;
+    }
+
+    .status-dot {
+        width: 9px;
+        height: 9px;
+        background: #00ff9d;
+        border-radius: 50%;
+        box-shadow: 0 0 12px #00ff9d;
     }
 
     /* Feature cards */
     .card {
-        background-color: #0a1222;
-        border: 1px solid #12304a;
-        border-radius: 18px;
-        padding: 22px;
-        min-height: 150px;
-        margin-bottom: 15px;
+        min-height: 190px;
+        padding: 25px;
+        border-radius: 20px;
+        background: linear-gradient(
+            145deg,
+            rgba(14, 27, 48, 0.95),
+            rgba(7, 15, 29, 0.95)
+        );
+        border: 1px solid rgba(0, 217, 255, 0.25);
+        box-shadow:
+            0 0 20px rgba(0, 217, 255, 0.05),
+            inset 0 0 20px rgba(0, 217, 255, 0.02);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
     }
 
     .card:hover {
-        border-color: #00c8ff;
+        transform: translateY(-5px);
+        border: 1px solid rgba(0, 217, 255, 0.7);
+        box-shadow:
+            0 0 25px rgba(0, 217, 255, 0.15);
     }
 
     .card-icon {
-        font-size: 30px;
+        font-size: 38px;
+        margin-bottom: 12px;
     }
 
     .card-title {
-        font-size: 20px;
+        font-size: 23px;
         font-weight: 700;
-        color: white;
-        margin-top: 8px;
+        color: #ffffff;
+        margin-bottom: 8px;
     }
 
     .card-text {
-        color: #8998b0;
-        font-size: 14px;
-        margin-top: 5px;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #9eacbf;
     }
 
     /* Section title */
     .section-title {
-        color: white;
-        font-size: 24px;
+        font-size: 28px;
         font-weight: 700;
         margin-top: 30px;
         margin-bottom: 15px;
+        color: #ffffff;
     }
 
-    /* Response */
-    .response {
-        background-color: #081426;
-        border: 1px solid #00c8ff;
-        border-radius: 18px;
-        padding: 25px;
-        margin-top: 20px;
+    /* Input labels */
+    label {
+        color: #dce8f5 !important;
+        font-weight: 600 !important;
     }
 
-    .response-title {
-        color: #00d9ff;
-        font-size: 20px;
-        font-weight: 700;
+    /* Text input */
+    .stTextInput input,
+    .stTextArea textarea {
+        background-color: #0a1220 !important;
+        color: white !important;
+        border: 1px solid rgba(0, 217, 255, 0.25) !important;
+        border-radius: 12px !important;
     }
 
-    /* Button */
-    .stButton button {
+    .stTextInput input:focus,
+    .stTextArea textarea:focus {
+        border: 1px solid #00d9ff !important;
+        box-shadow: 0 0 10px rgba(0, 217, 255, 0.2) !important;
+    }
+
+    /* Selectbox */
+    div[data-baseweb="select"] > div {
+        background-color: #0a1220 !important;
+        border: 1px solid rgba(0, 217, 255, 0.25) !important;
+        border-radius: 12px !important;
+    }
+
+    /* Ask button */
+    .stButton > button {
         background: linear-gradient(
             90deg,
-            #008cff,
-            #5b5cff
-        );
+            #00bfff,
+            #0077ff
+        ) !important;
 
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px;
-        font-weight: 700;
+        color: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 12px 20px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+
+        box-shadow:
+            0 0 15px rgba(0, 191, 255, 0.25);
+
+        transition: all 0.3s ease;
     }
 
-    .stButton button:hover {
-        box-shadow: 0 0 20px #008cff;
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 0 25px rgba(0, 191, 255, 0.5);
+    }
+
+    /* Response box */
+    .response-box {
+        background: rgba(10, 20, 35, 0.95);
+        border: 1px solid rgba(0, 217, 255, 0.25);
+        border-radius: 18px;
+        padding: 25px;
+        margin-top: 25px;
+        color: #eaf6ff;
+        line-height: 1.7;
+        box-shadow: 0 0 20px rgba(0, 217, 255, 0.05);
+    }
+
+    /* Footer */
+    .custom-footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 20px;
+        color: #68788d;
+        font-size: 13px;
     }
 
     </style>
@@ -139,74 +221,36 @@ st.markdown(
 )
 
 
-# =========================================================
-# SIDEBAR
-# =========================================================
-
-with st.sidebar:
-
-    st.title("🎓 Study Tutor")
-
-    st.markdown(
-        """
-        ### 📚 Study Modes
-
-        💡 **Explain Topic**
-
-        Understand difficult concepts.
-
-        ❓ **Ask Question**
-
-        Ask your tutor anything.
-
-        🧠 **Practice Quiz**
-
-        Test your knowledge.
-
-        ✅ **Check My Answer**
-
-        Get feedback on your answer.
-        """
-    )
-
-    st.divider()
-
-    st.caption("Powered by CrewAI + Groq")
-
-
-# =========================================================
-# HERO
-# =========================================================
-
-st.markdown(
-    '<div class="main-title">🎓 Study Tutor AI</div>',
-    unsafe_allow_html=True
-)
-
+# -----------------------------
+# HERO SECTION
+# -----------------------------
 st.markdown(
     """
-    <div class="subtitle">
-        Your intelligent study companion — learn concepts,
-        practice questions, and improve your understanding.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    <div class="hero">
 
-st.markdown(
-    """
-    <div class="status">
-        🟢 AI Tutor Ready
+        <div class="hero-title">
+            🎓 Study Tutor AI
+        </div>
+
+        <div class="hero-subtitle">
+            Your intelligent study companion — learn concepts,
+            practice questions, and improve your understanding.
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            AI Tutor Ready
+        </div>
+
     </div>
     """,
     unsafe_allow_html=True
 )
 
 
-# =========================================================
+# -----------------------------
 # FEATURE CARDS
-# =========================================================
-
+# -----------------------------
 st.markdown(
     '<div class="section-title">✨ What can I help you with?</div>',
     unsafe_allow_html=True
@@ -216,12 +260,13 @@ col1, col2, col3 = st.columns(3)
 
 
 with col1:
-
     st.markdown(
         """
         <div class="card">
 
-            <div class="card-icon">💡</div>
+            <div class="card-icon">
+                💡
+            </div>
 
             <div class="card-title">
                 Learn
@@ -229,7 +274,8 @@ with col1:
 
             <div class="card-text">
                 Understand difficult concepts
-                with simple explanations.
+                with simple explanations and
+                useful examples.
             </div>
 
         </div>
@@ -239,20 +285,21 @@ with col1:
 
 
 with col2:
-
     st.markdown(
         """
         <div class="card">
 
-            <div class="card-icon">🧠</div>
+            <div class="card-icon">
+                🧠
+            </div>
 
             <div class="card-title">
                 Practice
             </div>
 
             <div class="card-text">
-                Generate questions and
-                test your knowledge.
+                Generate practice questions
+                and test your knowledge.
             </div>
 
         </div>
@@ -262,12 +309,13 @@ with col2:
 
 
 with col3:
-
     st.markdown(
         """
         <div class="card">
 
-            <div class="card-icon">⚡</div>
+            <div class="card-icon">
+                ⚡
+            </div>
 
             <div class="card-title">
                 Improve
@@ -284,56 +332,56 @@ with col3:
     )
 
 
-# =========================================================
-# STUDY INPUT
-# =========================================================
-
+# -----------------------------
+# STUDY SECTION
+# -----------------------------
 st.markdown(
-    '<div class="section-title">📚 Start Learning</div>',
+    '<div class="section-title">📚 Start Studying</div>',
     unsafe_allow_html=True
 )
 
 
 topic = st.text_input(
-    "Study Topic",
-    placeholder="Example: Data Structures"
+    "📖 Study Topic",
+    placeholder="Example: Data Structures, Statistics, Python..."
 )
 
 
 mode = st.selectbox(
-    "Study Mode",
+    "🎯 Study Mode",
     [
-        "Explain Topic",
-        "Ask Question",
-        "Practice Quiz",
-        "Check My Answer"
+        "Explain Concept",
+        "Practice Questions",
+        "Check My Answer",
+        "General Question"
     ]
 )
 
 
 question = st.text_area(
-    "💬 Your Question",
-    placeholder=(
-        "Example: Explain binary search "
-        "like I am a beginner."
-    ),
-    height=140
+    "💬 What would you like to ask?",
+    placeholder="Ask your Study Tutor anything...",
+    height=150
 )
 
 
-# =========================================================
-# ASK TUTOR
-# =========================================================
-
-if st.button("✨ Ask Study Tutor", use_container_width=True):
+# -----------------------------
+# ASK BUTTON
+# -----------------------------
+if st.button(
+    "✨ Ask Study Tutor",
+    use_container_width=True
+):
 
     if not question.strip():
 
-        st.warning("Please enter a question.")
+        st.warning(
+            "Please enter a question first."
+        )
 
     else:
 
-        with st.spinner("🧠 Your tutor is thinking..."):
+        with st.spinner("🧠 Study Tutor is thinking..."):
 
             try:
 
@@ -344,17 +392,17 @@ if st.button("✨ Ask Study Tutor", use_container_width=True):
                 )
 
                 st.markdown(
-                    """
-                    <div class="response">
-                        <div class="response-title">
-                            👨‍🏫 Study Tutor
-                        </div>
+                    f"""
+                    <div class="response-box">
+
+                    <h3>🤖 Study Tutor</h3>
+
+                    {response}
+
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
-
-                st.markdown(response)
 
             except Exception as e:
 
@@ -363,12 +411,15 @@ if st.button("✨ Ask Study Tutor", use_container_width=True):
                 )
 
 
-# =========================================================
+# -----------------------------
 # FOOTER
-# =========================================================
-
-st.divider()
-
-st.caption(
-    "🎓 Study Tutor AI • CrewAI • Groq"
+# -----------------------------
+st.markdown(
+    """
+    <div class="custom-footer">
+        🎓 Study Tutor AI &nbsp;•&nbsp;
+        Powered by CrewAI + Groq
+    </div>
+    """,
+    unsafe_allow_html=True
 )
