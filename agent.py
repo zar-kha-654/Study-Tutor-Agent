@@ -4,7 +4,37 @@ from crewai.llm import LLM
 
 from tools import study_calculator
 from memory import create_memory
+# Fix CrewAI cache_breakpoint issue with Groq
+litellm.cache = None
+litellm.drop_params = True
 
+_original_completion = litellm.completion
+
+
+def completion_without_cache_breakpoint(*args, **kwargs):
+
+    kwargs["caching"] = False
+
+    messages = kwargs.get("messages", [])
+
+    for message in messages:
+
+        if isinstance(message, dict):
+            message.pop("cache_breakpoint", None)
+
+            content = message.get("content")
+
+            if isinstance(content, list):
+
+                for block in content:
+
+                    if isinstance(block, dict):
+                        block.pop("cache_breakpoint", None)
+
+    return _original_completion(*args, **kwargs)
+
+
+litellm.completion = completion_without_cache_breakpoint
 
 def create_study_tutor():
 
