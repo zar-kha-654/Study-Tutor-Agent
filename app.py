@@ -2,373 +2,135 @@ import streamlit as st
 from agent import ask_tutor
 
 
-# ---------------------------------------------------------
-# PAGE CONFIGURATION
-# ---------------------------------------------------------
+# =========================================================
+# PAGE CONFIG
+# =========================================================
 
 st.set_page_config(
     page_title="Study Tutor AI",
     page_icon="🎓",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # CUSTOM CSS
-# ---------------------------------------------------------
+# =========================================================
 
 st.markdown(
     """
     <style>
 
-    /* =========================
-       GLOBAL
-       ========================= */
-
+    /* Main background */
     .stApp {
-        background:
-            radial-gradient(
-                circle at 10% 10%,
-                rgba(0, 170, 255, 0.12),
-                transparent 30%
-            ),
-            radial-gradient(
-                circle at 90% 20%,
-                rgba(100, 50, 255, 0.10),
-                transparent 30%
-            ),
-            #050914;
-        color: #f5f7ff;
+        background-color: #050914;
+        color: white;
     }
 
-    /* Remove Streamlit top spacing */
+    /* Main container */
     .block-container {
+        max-width: 1150px;
         padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 1200px;
     }
 
-
-    /* =========================
-       SIDEBAR
-       ========================= */
-
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(
-            180deg,
-            #070d1c 0%,
-            #050914 100%
-        );
-
-        border-right: 1px solid rgba(0, 195, 255, 0.15);
-    }
-
-    section[data-testid="stSidebar"] h2 {
-        color: #00c8ff;
-    }
-
-
-    /* =========================
-       HEADER
-       ========================= */
-
-    .hero {
-        padding: 30px;
-        border-radius: 24px;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(0, 174, 255, 0.14),
-                rgba(80, 50, 255, 0.10)
-            );
-
-        border: 1px solid rgba(0, 195, 255, 0.25);
-
-        box-shadow:
-            0 0 40px rgba(0, 174, 255, 0.08);
-
-        margin-bottom: 25px;
-    }
-
-    .hero-title {
-        font-size: 42px;
+    /* Main title */
+    .main-title {
+        font-size: 44px;
         font-weight: 800;
+        color: #00d9ff;
         margin-bottom: 5px;
-
-        background: linear-gradient(
-            90deg,
-            #00d9ff,
-            #5b7cff,
-            #a855f7
-        );
-
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
 
-    .hero-subtitle {
-        color: #aebbd0;
-        font-size: 17px;
+    /* Subtitle */
+    .subtitle {
+        color: #9aa9c2;
+        font-size: 18px;
+        margin-bottom: 20px;
     }
 
+    /* Status */
+    .status {
+        display: inline-block;
+        padding: 7px 15px;
+        border-radius: 20px;
+        background-color: #071c2b;
+        border: 1px solid #00c8ff;
+        color: #6eeaff;
+        font-size: 14px;
+    }
 
-    /* =========================
-       FEATURE CARDS
-       ========================= */
-
-    .feature-card {
-        background: rgba(10, 18, 35, 0.75);
-
-        border: 1px solid rgba(0, 195, 255, 0.15);
-
+    /* Feature cards */
+    .card {
+        background-color: #0a1222;
+        border: 1px solid #12304a;
         border-radius: 18px;
-
-        padding: 20px;
-
-        min-height: 125px;
-
-        transition: 0.2s ease;
-
-        box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.20);
+        padding: 22px;
+        min-height: 150px;
+        margin-bottom: 15px;
     }
 
-    .feature-card:hover {
-        border-color: rgba(0, 195, 255, 0.45);
-
-        box-shadow:
-            0 0 25px rgba(0, 195, 255, 0.10);
+    .card:hover {
+        border-color: #00c8ff;
     }
 
-    .feature-icon {
-        font-size: 28px;
+    .card-icon {
+        font-size: 30px;
     }
 
-    .feature-title {
+    .card-title {
+        font-size: 20px;
         font-weight: 700;
+        color: white;
         margin-top: 8px;
-        color: #ffffff;
     }
 
-    .feature-text {
-        color: #8e9bb2;
+    .card-text {
+        color: #8998b0;
         font-size: 14px;
         margin-top: 5px;
     }
 
-
-    /* =========================
-       SECTION TITLES
-       ========================= */
-
+    /* Section title */
     .section-title {
-        font-size: 22px;
+        color: white;
+        font-size: 24px;
         font-weight: 700;
-
-        margin-top: 25px;
+        margin-top: 30px;
         margin-bottom: 15px;
-
-        color: #f5f7ff;
     }
 
-
-    /* =========================
-       INPUTS
-       ========================= */
-
-    .stTextInput input,
-    .stTextArea textarea {
-
-        background-color: #080f20 !important;
-
-        color: white !important;
-
-        border: 1px solid rgba(0, 195, 255, 0.20) !important;
-
-        border-radius: 12px !important;
-    }
-
-    .stTextInput input:focus,
-    .stTextArea textarea:focus {
-
-        border: 1px solid #00c8ff !important;
-
-        box-shadow:
-            0 0 15px rgba(0, 200, 255, 0.15) !important;
-    }
-
-
-    /* =========================
-       SELECT BOX
-       ========================= */
-
-    div[data-baseweb="select"] > div {
-
-        background-color: #080f20 !important;
-
-        border: 1px solid rgba(0, 195, 255, 0.20) !important;
-
-        border-radius: 12px !important;
-
-        color: white !important;
-    }
-
-
-    /* =========================
-       BUTTON
-       ========================= */
-
-    .stButton > button {
-
-        width: 100%;
-
-        border-radius: 12px;
-
+    /* Response */
+    .response {
+        background-color: #081426;
         border: 1px solid #00c8ff;
+        border-radius: 18px;
+        padding: 25px;
+        margin-top: 20px;
+    }
 
-        background:
-            linear-gradient(
-                90deg,
-                #008cff,
-                #5b5cff
-            );
+    .response-title {
+        color: #00d9ff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    /* Button */
+    .stButton button {
+        background: linear-gradient(
+            90deg,
+            #008cff,
+            #5b5cff
+        );
 
         color: white;
-
-        font-size: 16px;
-
-        font-weight: 700;
-
+        border: none;
+        border-radius: 12px;
         padding: 12px;
-
-        transition: 0.2s ease;
-
-        box-shadow:
-            0 0 20px rgba(0, 174, 255, 0.20);
-    }
-
-    .stButton > button:hover {
-
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 0 30px rgba(0, 200, 255, 0.40);
-    }
-
-
-    /* =========================
-       RESPONSE CARD
-       ========================= */
-
-    .response-card {
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(7, 20, 38, 0.95),
-                rgba(9, 16, 35, 0.95)
-            );
-
-        border: 1px solid rgba(0, 195, 255, 0.22);
-
-        border-radius: 20px;
-
-        padding: 25px;
-
-        margin-top: 20px;
-
-        box-shadow:
-            0 0 30px rgba(0, 195, 255, 0.08);
-    }
-
-    .response-header {
-
-        color: #00d9ff;
-
-        font-size: 18px;
-
         font-weight: 700;
-
-        margin-bottom: 12px;
     }
 
-
-    /* =========================
-       STATUS
-       ========================= */
-
-    .status {
-
-        display: inline-flex;
-
-        align-items: center;
-
-        gap: 8px;
-
-        padding: 7px 12px;
-
-        border-radius: 20px;
-
-        background: rgba(0, 200, 255, 0.08);
-
-        border: 1px solid rgba(0, 200, 255, 0.20);
-
-        color: #7deaff;
-
-        font-size: 13px;
-    }
-
-    .status-dot {
-
-        width: 8px;
-
-        height: 8px;
-
-        background: #00e5ff;
-
-        border-radius: 50%;
-
-        box-shadow:
-            0 0 10px #00e5ff;
-    }
-
-
-    /* =========================
-       FOOTER
-       ========================= */
-
-    .footer {
-
-        text-align: center;
-
-        color: #64748b;
-
-        margin-top: 40px;
-
-        font-size: 13px;
-    }
-
-
-    /* =========================
-       MOBILE
-       ========================= */
-
-    @media (max-width: 768px) {
-
-        .hero-title {
-            font-size: 30px;
-        }
-
-        .hero {
-            padding: 22px;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-        }
-
+    .stButton button:hover {
+        box-shadow: 0 0 20px #008cff;
     }
 
     </style>
@@ -377,106 +139,95 @@ st.markdown(
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # SIDEBAR
-# ---------------------------------------------------------
+# =========================================================
 
 with st.sidebar:
 
-    st.markdown("## 🎓 Study Tutor")
+    st.title("🎓 Study Tutor")
 
     st.markdown(
         """
-        <div class="status">
-            <span class="status-dot"></span>
-            AI Tutor Online
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        ### 📚 Study Modes
 
-    st.markdown("---")
+        💡 **Explain Topic**
 
-    st.markdown("### 📚 Study Modes")
+        Understand difficult concepts.
 
-    st.markdown(
-        """
-        **💡 Explain Topic**
-
-        Understand a concept simply.
-
-        **❓ Ask Question**
+        ❓ **Ask Question**
 
         Ask your tutor anything.
 
-        **🧠 Practice Quiz**
+        🧠 **Practice Quiz**
 
         Test your knowledge.
 
-        **✅ Check My Answer**
+        ✅ **Check My Answer**
 
         Get feedback on your answer.
         """
     )
 
-    st.markdown("---")
+    st.divider()
 
-    st.markdown("### ⚡ Powered By")
-
-    st.caption("CrewAI")
-    st.caption("Groq")
-    st.caption("AI Memory")
+    st.caption("Powered by CrewAI + Groq")
 
 
-# ---------------------------------------------------------
-# HERO SECTION
-# ---------------------------------------------------------
+# =========================================================
+# HERO
+# =========================================================
+
+st.markdown(
+    '<div class="main-title">🎓 Study Tutor AI</div>',
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
-    <div class="hero">
+    <div class="subtitle">
+        Your intelligent study companion — learn concepts,
+        practice questions, and improve your understanding.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-        <div class="hero-title">
-            🎓 Study Tutor AI
-        </div>
-
-        <div class="hero-subtitle">
-            Your intelligent study companion — learn concepts,
-            practice questions, and improve your understanding.
-        </div>
-
-        <br>
-
-        <div class="status">
-            <span class="status-dot"></span>
-            AI Tutor Ready
-        </div>
-
+st.markdown(
+    """
+    <div class="status">
+        🟢 AI Tutor Ready
     </div>
     """,
     unsafe_allow_html=True
 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # FEATURE CARDS
-# ---------------------------------------------------------
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">✨ What can I help you with?</div>',
+    unsafe_allow_html=True
+)
 
 col1, col2, col3 = st.columns(3)
+
 
 with col1:
 
     st.markdown(
         """
-        <div class="feature-card">
+        <div class="card">
 
-            <div class="feature-icon">💡</div>
+            <div class="card-icon">💡</div>
 
-            <div class="feature-title">
+            <div class="card-title">
                 Learn
             </div>
 
-            <div class="feature-text">
+            <div class="card-text">
                 Understand difficult concepts
                 with simple explanations.
             </div>
@@ -491,15 +242,15 @@ with col2:
 
     st.markdown(
         """
-        <div class="feature-card">
+        <div class="card">
 
-            <div class="feature-icon">🧠</div>
+            <div class="card-icon">🧠</div>
 
-            <div class="feature-title">
+            <div class="card-title">
                 Practice
             </div>
 
-            <div class="feature-text">
+            <div class="card-text">
                 Generate questions and
                 test your knowledge.
             </div>
@@ -514,15 +265,15 @@ with col3:
 
     st.markdown(
         """
-        <div class="feature-card">
+        <div class="card">
 
-            <div class="feature-icon">⚡</div>
+            <div class="card-icon">⚡</div>
 
-            <div class="feature-title">
+            <div class="card-title">
                 Improve
             </div>
 
-            <div class="feature-text">
+            <div class="card-text">
                 Get personalized feedback
                 and improve your answers.
             </div>
@@ -533,9 +284,9 @@ with col3:
     )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # STUDY INPUT
-# ---------------------------------------------------------
+# =========================================================
 
 st.markdown(
     '<div class="section-title">📚 Start Learning</div>',
@@ -545,7 +296,7 @@ st.markdown(
 
 topic = st.text_input(
     "Study Topic",
-    placeholder="e.g. Data Structures, Statistics, Python..."
+    placeholder="Example: Data Structures"
 )
 
 
@@ -561,32 +312,28 @@ mode = st.selectbox(
 
 
 question = st.text_area(
-    "💬 What would you like to learn?",
+    "💬 Your Question",
     placeholder=(
         "Example: Explain binary search "
-        "like I am a complete beginner."
+        "like I am a beginner."
     ),
     height=140
 )
 
 
-# ---------------------------------------------------------
-# ASK BUTTON
-# ---------------------------------------------------------
+# =========================================================
+# ASK TUTOR
+# =========================================================
 
-if st.button("✨ Ask Study Tutor"):
+if st.button("✨ Ask Study Tutor", use_container_width=True):
 
     if not question.strip():
 
-        st.warning(
-            "Please enter a question first."
-        )
+        st.warning("Please enter a question.")
 
     else:
 
-        with st.spinner(
-            "🧠 Your AI tutor is thinking..."
-        ):
+        with st.spinner("🧠 Your tutor is thinking..."):
 
             try:
 
@@ -598,22 +345,16 @@ if st.button("✨ Ask Study Tutor"):
 
                 st.markdown(
                     """
-                    <div class="response-card">
-
-                        <div class="response-header">
+                    <div class="response">
+                        <div class="response-title">
                             👨‍🏫 Study Tutor
                         </div>
-
+                    </div>
                     """,
                     unsafe_allow_html=True
                 )
 
                 st.markdown(response)
-
-                st.markdown(
-                    "</div>",
-                    unsafe_allow_html=True
-                )
 
             except Exception as e:
 
@@ -622,18 +363,12 @@ if st.button("✨ Ask Study Tutor"):
                 )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # FOOTER
-# ---------------------------------------------------------
+# =========================================================
 
-st.markdown(
-    """
-    <div class="footer">
+st.divider()
 
-        🎓 Study Tutor AI · Built with
-        Streamlit + CrewAI + Groq
-
-    </div>
-    """,
-    unsafe_allow_html=True
+st.caption(
+    "🎓 Study Tutor AI • CrewAI • Groq"
 )
