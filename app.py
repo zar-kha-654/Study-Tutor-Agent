@@ -264,9 +264,7 @@ with col1:
         """
         <div class="card">
 
-            <div class="card-icon">
-                💡
-            </div>
+            <div class="card-icon">💡</div>
 
             <div class="card-title">
                 Learn
@@ -289,9 +287,7 @@ with col2:
         """
         <div class="card">
 
-            <div class="card-icon">
-                🧠
-            </div>
+            <div class="card-icon">🧠</div>
 
             <div class="card-title">
                 Practice
@@ -313,9 +309,7 @@ with col3:
         """
         <div class="card">
 
-            <div class="card-icon">
-                ⚡
-            </div>
+            <div class="card-icon">⚡</div>
 
             <div class="card-title">
                 Improve
