@@ -8,11 +8,11 @@ from memory import create_memory
 
 def create_study_tutor():
 
-    llm = {
-        "model": "groq/openai/gpt-oss-120b",
-        "api_key": os.getenv("GROQ_API_KEY"),
-        "temperature": 0.3
-    }
+    llm = LLM(
+    model="groq/openai/gpt-oss-120b",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.3
+)
 
     tutor = Agent(
         role="Study Tutor",
